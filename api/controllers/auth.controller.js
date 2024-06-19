@@ -25,10 +25,15 @@ export const signin = async (req, res, next) => {
         if (!validPassword) return next(errorHandler(401, "Wrong Credentials!"));
 
         const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+
+
+        // by doing this we remove password from being sent to the server side 
+        // the rest is only user id and info without their password
+        const { password: pass, ...rest } = validUser._doc;
         res
             .cookie("access_token", token, { httpOnly: true })
             .status(200)
-            .json(validUser);
+            .json(rest);
     } catch (error) {
         next(error);
     }
