@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from "react";
-
+import {useNavigate} from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import {
     updateUserStart,
     updateUserFailure,
     updateUserSuccess,
+    deleteUserStart,
+    deleteUserFailure,
+    deleteUserSuccess,
 } from "../redux/user/userSlice.js";
 
 import {
@@ -16,6 +19,7 @@ import {
 import { app } from "../firebase.js";
 
 const profile = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { currentUser, loading, error } = useSelector((state) => state.user);
     const [formData, setFormData] = useState({});
@@ -87,6 +91,26 @@ const profile = () => {
             dispatch(updateUserFailure(error.message));
         }
     };
+
+    const handleDeleteUser = async () => {
+        try{
+        dispatch(deleteUserStart());
+            const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+            method: "DELETE",});
+            const data = res.json();
+            if(data.success === false){
+                dispatch(deleteUserFailure(data.message));
+                return;
+            }
+
+            dispatch(deleteUserSuccess(data));
+            // navigate('/sign-in');
+        }
+        catch(error){
+            dispatch(deleteUserFailure(error.message));
+        }
+
+    }
     return (
         <div className="p-3 max-w-lg mx-auto">
             <h1 className="text-3xl text-center font-semibold my-7">profile</h1>
@@ -151,7 +175,7 @@ const profile = () => {
                     </button>
             </form>
             <div className="flex justify-between mt-3">
-                <span className="text-red-700 cursor-pointer">Delete Account</span>
+                <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete Account</span>
                 <span className="text-red-700 cursor-pointer">Sign Out</span>
             </div>
             <p className="text-red-700 mt-5">{error ? error : ""}</p>
