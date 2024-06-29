@@ -10,7 +10,6 @@ const OAuth = () => {
 
   const handleGoogleClick = async () => {
     try {
-      // dispatch(signInStart());
 
       const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
