@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import  ListingCard from "../components/ListingCard";
 
 export default function Search() {
   const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [listings, setListings] = useState([]);
 
   const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
@@ -94,18 +95,16 @@ export default function Search() {
       });
     }
 
+    const fetchListing = async () => {
+      setLoading(true);
+      const searchQuery = urlParams.toString();
+      const res = await fetch(`/api/listing/get?${searchQuery}`);
+      const data = await res.json();
+      setListings(data);
+      setLoading(false);
+    };
 
-
-        const fetchListing = async () => {
-            setLoading(true);
-            const searchQuery = urlParams.toString();
-            const res = await fetch `/api/listing/get?${searchQuery}`;
-            const data = await res.json();
-            setListings(data);
-            setLoading(false);
-        }
-
-        fetchListing();
+    fetchListing();
   }, [location.search]);
 
   return (
@@ -210,10 +209,22 @@ export default function Search() {
           </button>
         </form>
       </div>
-      <div className="">
+      <div className="flex-1">
         <h1 className="text-3xl font-semibold border-b p-3 text-slate-700 mt-5">
           Listing results:
         </h1>
+        <div className="p-7 flex flex-wrap gap-4 justify-center">
+          {!loading && listings.length === 0 && (
+            <p className="text-xl text-slate-700">No listings found</p>
+          )}
+          {loading && (
+            <p className="text-xl text-slate-700 text-center w-full">
+              loading...
+            </p>
+          )}
+
+                    {!loading && listings && listings.map(listing => (<ListingCard key={listing._id} listing={listing} />))}
+        </div>
       </div>
     </div>
   );

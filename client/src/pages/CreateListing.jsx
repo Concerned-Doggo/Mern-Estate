@@ -264,7 +264,7 @@ export default function CreateListing() {
                                 max="10"
                                 required
                                 onChange={handleChange}
-                                value={formData.bedrooms}
+                                value={formData.bathrooms}
                                 className="p-3 border border-gray-300 rounded-lg"
                             />
                             <p>Baths</p>
