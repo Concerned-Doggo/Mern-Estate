@@ -4,12 +4,11 @@ import { MdLocationOn } from "react-icons/md";
 import { FaBath, FaBed } from "react-icons/fa";
 
 const ListingCard = ({ listing }) => {
-  console.log(listing);
   return (
     <div className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300 ease-in overflow-hidden rounded-lg w-full sm:w-[300px]">
       <Link to={`/listing/${listing._id}`}>
         <img
-          src={`${listing.imageUrls[0]}` || "https://www.pexels.com/photo/brown-and-gray-painted-house-in-front-of-road-1396122/"}
+          src={`${listing.imageUrls[0]}`}
           alt="listingCover"
           className="h-[320px] sm:h-[220px] w-full object-cover hover:scale-105 transition-scale duration-300 ease-in"
         />
